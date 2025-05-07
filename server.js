@@ -5,7 +5,11 @@ const path = require('path');
 const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
-const cors = require('cors');
+app.use(cors({
+  origin: 'https://dynamic-frangipane-bb5fd2.netlify.app',
+  credentials: true,
+}));
+
 const Transaction = require('./models/Transaction'); // Mongoose model
 
 const app = express();
