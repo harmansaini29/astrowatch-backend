@@ -8,14 +8,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const Transaction = require('./models/Transaction'); // Mongoose model
 
-const app = express(); // ✅ app initialized before any use
-
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ────── Middleware ──────
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors()); // Enable Cross-Origin Resource Sharing
+app.use(express.json()); // Parse incoming JSON requests
+app.use(express.urlencoded({ extended: true })); // Parse incoming URL-encoded data
 
 // ────── Multer Setup ──────
 const storage = multer.diskStorage({
@@ -116,23 +115,20 @@ app.post('/api/submit-transaction', upload.single('screenshot'), async (req, res
   }
 });
 
-// ────── Health Check ──────
+// ────── Health Check Route ──────
 app.get('/', (req, res) => {
   res.send('🪐 Welcome to AstroWatch API! Server is alive!');
 });
 
-// ────── MongoDB Connection and Start Server ──────
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('✅ Connected to MongoDB');
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+// ────── MongoDB Connection ──────
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('✅ Connected to MongoDB');
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
   });
-})
-.catch((err) => {
-  console.error('❌ MongoDB connection error:', err);
-  process.exit(1);
-});
