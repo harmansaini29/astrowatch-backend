@@ -13,6 +13,8 @@ const transactionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+}, {
+  timestamps: true  // <-- Automatically adds createdAt and updatedAt
 });
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
